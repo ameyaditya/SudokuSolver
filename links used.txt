@@ -1,0 +1,12 @@
+https://www.pyimagesearch.com/2017/02/13/recognizing-digits-with-opencv-and-python/
+
+https://www.pyimagesearch.com/2014/09/01/build-kick-ass-mobile-document-scanner-just-5-minutes/
+https://www.pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
+
+https://www.pyimagesearch.com/2014/05/05/building-pokedex-python-opencv-perspective-warping-step-5-6/
+
+https://www.pyimagesearch.com/2014/04/21/building-pokedex-python-finding-game-boy-screen-step-4-6/
+
+https://www.pyimagesearch.com/2014/04/07/building-pokedex-python-indexing-sprites-using-shape-descriptors-step-3-6/
+
+https://www.pyimagesearch.com/2016/02/08/opencv-shape-detection/
