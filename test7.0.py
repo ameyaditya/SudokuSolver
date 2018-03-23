@@ -99,7 +99,7 @@ for i in range(0,600-(600//9),600//9):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 cropped = thresh[cy-22:cy+22,cx-20:cx+20]
-                px8 = cv2.resize(cropped,(8,8),interpolation=cv2.INTER_AREA)
+                px8 = cv2.resize(cropped,(28,28),interpolation=cv2.INTER_AREA)
                 print(type(px8))
                 #input()
                 #print(nn.predict(px8))
