@@ -100,13 +100,13 @@ for i in range(0,600-(600//9),600//9):
                 cy = int(M['m01']/M['m00'])
                 cropped = thresh[cy-22:cy+22,cx-20:cx+20]
                 #px8 = cv2.resize(cropped,(8,8),interpolation=cv2.INTER_AREA)
-                _,inverted_img = cv2.threshold(cropped,180,255,cv2.THRESH_BINARY_INV)
+                _,inverted_img = cv2.threshold(cropped,230,255,cv2.THRESH_BINARY_INV)
                 #print(i/(600//9),j/(60//9))
                 #input()
                 #print(nn.predict(px8))
-                #cv2.imshow("px2",inverted_img)
+                cv2.imshow("px2",inverted_img)
                 #cv2.imshow("px",px8)
-                cv2.imwrite("data2/"+str(i)+".jpg",inverted_img)
+                #cv2.imwrite("data2/"+str(i)+".jpg",inverted_img)
                 i+=1
                 cv2.waitKey(0)
 
