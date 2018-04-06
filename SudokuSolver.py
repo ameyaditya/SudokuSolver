@@ -92,10 +92,12 @@ def load_images(folder,xtrain,ytrain):
             the names of the files are actually the targets to the data values in the
             images, so we append that into ytrain
             """
-            dataset = cv2.resize(dataset,(50,50),interpolation=cv2.INTER_AREA)
+            dataset = cv2.resize(dataset,(20,20),interpolation=cv2.INTER_AREA)
             gray = cv2.cvtColor(dataset,cv2.COLOR_BGR2GRAY)
-            _,thresh = cv2threshold(gray,150,255,cv2.THRESH_BINARY)
-            xtrain.append(*thresh.reshape(1,2500))
+            _,thresh = cv2.threshold(gray,130,255,cv2.THRESH_BINARY)
+            #cv2.imshow("thresh",thresh)
+            #cv2.waitKey(0)
+            xtrain.append(*thresh.reshape(1,400))
             ytrain.append(int(folder.split('\\')[1]))
 
 def training_classifier(clf,folder):
@@ -119,6 +121,8 @@ itertating through each box, and determining the number present in that particul
 cell and storing it into an array
 """
 def create_sudoku_matrix(image2):
+    clf = svm.SVC(gamma=0.001)
+    training_classifier(clf,"data\\")
     sudoku = [[0 for i in range(9)]for j in range(9)]
     iterX = 0
     iterY = 0
@@ -199,4 +203,77 @@ def create_sudoku_matrix(image2):
             cropped = thresh[crop_width:70-crop_width,crop_width:70-crop_width]
 
             if int(cv2.countNonZero(cropped)) < 2400:
-                
+                test = cropped.copy()
+                test = cv2.resize(test,(20,20),interpolation=cv2.INTER_AREA)
+                test = test.reshape(1,400)
+                prediction = int(*clf.predict(test))
+
+                cv2.imshow("block",cropped)
+                print(clf.predict(test))
+                cv2.waitKey(0)
+
+                sudoku[iterX%9][iterY%9] = prediction
+            iterY += 1
+        iterX += 1
+    return sudoku
+
+
+def print_solution(sudoku):
+    for i in range(9):
+        for j in range(9):
+            print(sudoku[i][j],end=" ")
+        print()
+
+def is_solved(sudoku):
+    for i in range(9):
+        for j in range(9):
+            if sudoku[i][j] == 0:
+                return False
+    return True
+
+def find_empty(sudoku):
+    for i in range(9):
+        for j in range(9):
+            if sudoku[i][j] == 0:
+                return [i,j]
+
+def used_in_row(row,num,sudoku):
+    for i in range(9):
+        if num == sudoku[row][i]:
+            return False
+    return True
+def used_in_col(col,num,sudoku):
+    for i in range(9):
+        if num == sudoku[i][col]:
+            return False
+    return True
+def used_in_box(row,col,num,sudoku):
+    for i in range(3):
+        for j in range(3):
+            if sudoku[i+row][j+col] == num:
+                return False
+    return True
+
+def is_safe(row,col,num,sudoku):
+    return  used_in_row(row,num,sudoku) and used_in_col(col,num,sudoku) and used_in_box(row - row%3,col - col%3,num,sudoku)
+
+def solve_sudoku(sudoku):
+    if is_solved(sudoku):
+        print_solution(sudoku)
+        return True
+    row = find_empty(sudoku)[0]
+    col = find_empty(sudoku)[1]
+
+    for i in range(1,10):
+        if is_safe(row,col,i,sudoku):
+            sudoku[row][col] = i
+            if(solve_sudoku(sudoku)):
+                return True
+            grid[row][col] = 0
+    return False
+
+
+if __name__ == "__main__":
+    image = cv2.imread("sudoku.jpg")
+    if solve_sudoku(create_sudoku_matrix(image)):
+        print("The solution is found")

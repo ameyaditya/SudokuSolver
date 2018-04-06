@@ -29,6 +29,7 @@ data2 = np.array(data2)
 print(data2.shape)
 clf = svm.SVC(gamma = 0.001)
 clf.fit(data2,target)
-print(clf.predict([data2[185]]))
+print(type(int(*clf.predict([data2[185]]))))
+
 cv2.imshow('ans',data[185])
 cv2.waitKey(0)
