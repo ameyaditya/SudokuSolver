@@ -92,12 +92,12 @@ def load_images(folder,xtrain,ytrain):
             the names of the files are actually the targets to the data values in the
             images, so we append that into ytrain
             """
-            dataset = cv2.resize(dataset,(20,20),interpolation=cv2.INTER_AREA)
+            dataset = cv2.resize(dataset,(50,50),interpolation=cv2.INTER_AREA)
             gray = cv2.cvtColor(dataset,cv2.COLOR_BGR2GRAY)
-            _,thresh = cv2.threshold(gray,130,255,cv2.THRESH_BINARY)
+            _,thresh = cv2.threshold(gray,150,255,cv2.THRESH_BINARY)
             #cv2.imshow("thresh",thresh)
             #cv2.waitKey(0)
-            xtrain.append(*thresh.reshape(1,400))
+            xtrain.append(*thresh.reshape(1,2500))
             ytrain.append(int(folder.split('\\')[1]))
 
 def training_classifier(clf,folder):
@@ -111,7 +111,7 @@ def training_classifier(clf,folder):
     #in performing operations on them
     xtrain = np.array(xtrain)
     ytrain = np.array(ytrain)
-
+    #print(xtrain.shape,ytrain.shape)
     #fits the training dataset to the SVC classifier
     clf.fit(xtrain,ytrain)
 
@@ -121,7 +121,7 @@ itertating through each box, and determining the number present in that particul
 cell and storing it into an array
 """
 def create_sudoku_matrix(image2):
-    clf = svm.SVC(gamma=0.001)
+    clf = svm.LinearSVC()
     training_classifier(clf,"data\\")
     sudoku = [[0 for i in range(9)]for j in range(9)]
     iterX = 0
@@ -204,12 +204,13 @@ def create_sudoku_matrix(image2):
 
             if int(cv2.countNonZero(cropped)) < 2400:
                 test = cropped.copy()
-                test = cv2.resize(test,(20,20),interpolation=cv2.INTER_AREA)
-                test = test.reshape(1,400)
+                test = cv2.resize(test,(50,50),interpolation=cv2.INTER_AREA)
+                test = test.reshape(1,2500)
                 prediction = int(*clf.predict(test))
 
-                cv2.imshow("block",cropped)
+                cv2.imshow("block",test.reshape(50,50))
                 print(clf.predict(test))
+                #print(clf.predict(thre))
                 cv2.waitKey(0)
 
                 sudoku[iterX%9][iterY%9] = prediction
@@ -269,7 +270,7 @@ def solve_sudoku(sudoku):
             sudoku[row][col] = i
             if(solve_sudoku(sudoku)):
                 return True
-            grid[row][col] = 0
+            sudoku[row][col] = 0
     return False
 
 
