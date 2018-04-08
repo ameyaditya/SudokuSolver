@@ -15,7 +15,7 @@ def image_checker(image2):
     run the canny edge to detect the edges
     """
     #reduce or increase the value of blur based on the amount of lines detected in canny edge
-    blurred = cv2.medianBlur(image,7)
+    blurred = cv2.medianBlur(image,9)
 
     gray = cv2.cvtColor(blurred,cv2.COLOR_BGR2GRAY)
 
@@ -39,7 +39,7 @@ def image_checker(image2):
     """
     _,contours,_ = cv2.findContours(edged,cv2.RETR_LIST,cv2.CHAIN_APPROX_NONE)
 
-    contours = sorted(contours,key=cv2.contourArea,reverse=True)[0:10]
+    contours = sorted(contours,key=cv2.contourArea,reverse=True)[4:10]
     #sliced the list to first 10 biggest contours, in case the puzzle is not found
     #change the index values and try again
 
@@ -198,7 +198,7 @@ def create_sudoku_matrix(image2):
             #has a number or not
 
             grey = cv2.cvtColor(roi,cv2.COLOR_BGR2GRAY)
-            _,thresh = cv2.threshold(grey,150,255,cv2.THRESH_BINARY)
+            _,thresh = cv2.threshold(grey,80,255,cv2.THRESH_BINARY)
             crop_width = 10
             cropped = thresh[crop_width:70-crop_width,crop_width:70-crop_width]
 
@@ -275,6 +275,6 @@ def solve_sudoku(sudoku):
 
 
 if __name__ == "__main__":
-    image = cv2.imread("sudoku.jpg")
+    image = cv2.imread("sample3.jpg")
     if solve_sudoku(create_sudoku_matrix(image)):
         print("The solution is found")
